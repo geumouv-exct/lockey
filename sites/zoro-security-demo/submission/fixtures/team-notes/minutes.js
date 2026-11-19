@@ -1,6 +1,5 @@
 const exportOptions = {
-  heading: '느티 사진동아리 회의록',
-  debug: true
+  heading: '느티 사진동아리 회의록'
 };
 
 export function exportMinutes(meeting) {
@@ -8,6 +7,5 @@ export function exportMinutes(meeting) {
   for (const item of meeting.agenda) {
     lines.push(`[${item.done ? '완료' : '예정'}] ${item.title} · ${item.assignee}`);
   }
-  if (exportOptions.debug) lines.push(`회의 ID: ${meeting.id}`);
   return lines.join('\n');
 }

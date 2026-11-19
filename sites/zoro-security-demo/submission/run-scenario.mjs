@@ -56,11 +56,26 @@ async function teamNotes() {
     await page.locator('label:has(input[value="folder"])').click();
     await page.locator('.folder-select').click();
     await page.locator('#folder-name').filter({ hasText: 'team-notes' }).waitFor();
+    await page.locator('label:has(input[value="folder"]) .target-badge').waitFor();
+    console.log('설문: 예 / 예 / 예 · 비밀번호 로그인 / 작성자 본인 / 글이나 댓글 → Zoro-1 로컬 폴더 추천');
     const scan = () => page.waitForResponse(r => r.url() === new URL('/api/project-scan', base).href);
     const [before] = await Promise.all([scan(), page.locator('#wizard-next').click()]);
     const initial = await before.json();
-    assert.deepEqual(initial.findings.map(f => f.id).sort(), ['cookie-httponly-false', 'debug-enabled']);
+    assert.deepEqual(initial.findings.map(f => f.id).sort(), ['sql-interpolation', 'tls-disabled']);
     console.log('점검 결과', initial.findings.map(f => f.path + ' · ' + f.id).join(', '));
+    for (const [cwe, file] of [['CWE-89', 'exhibition-calendar.js'], ['CWE-295', 'gallery-delivery.js']]) {
+      const slot = page.locator('#issue-list [data-issue-news="' + cwe + '"]');
+      const link = slot.getByRole('link');
+      await link.waitFor();
+      assert.equal(await link.count(), 1);
+      const url = await link.getAttribute('href');
+      assert.equal(new URL(url).protocol, 'https:');
+      console.log(cwe, '대표 뉴스:', await link.innerText(), url);
+      await slot.locator('xpath=ancestor::article[1]').getByRole('button', { name: '코드 비교' }).click();
+      await page.locator('[data-viewer-file]').filter({ hasText: file }).waitFor();
+      console.log('코드 비교:', file);
+      await page.locator('.code-viewer-close').click();
+    }
     await page.locator('#to-prompt-page').click();
     await page.locator('.prompt-local').click();
     const dialog = page.locator('#local-repair-window');
@@ -69,7 +84,7 @@ async function teamNotes() {
       document.querySelector('#local-repair-window [data-generate]').textContent.includes('남은'));
     assert.equal(await dialog.locator('[data-save]').isEnabled(), true, await dialog.locator('[data-status]').innerText());
     const paths = await dialog.locator('.ai-repair h3').allTextContents();
-    assert.deepEqual(paths.sort(), ['minutes.js', 'session.js']);
+    assert.deepEqual(paths.sort(), ['exhibition-calendar.js', 'gallery-delivery.js']);
     console.log('Zoro-1 수정안 생성', paths.join(', '));
     const [after] = await Promise.all([scan(), dialog.locator('[data-save]').click()]);
     assert.equal((await after.json()).findings.length, 0);

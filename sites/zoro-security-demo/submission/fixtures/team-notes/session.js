@@ -3,6 +3,6 @@ export const sessionCookie = {
   path: '/',
   sameSite: 'Lax',
   secure: true,
-  httpOnly: false,
+  httpOnly: true,
   maxAge: 60 * 60 * 8
 };
