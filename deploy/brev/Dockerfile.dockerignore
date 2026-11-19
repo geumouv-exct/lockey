@@ -15,6 +15,7 @@ sites/zoro-security-demo/*.test.mjs
 !sites/zoro-security-demo/index.html
 !sites/zoro-security-demo/style.css
 !sites/zoro-security-demo/lockey-icon.png
+!sites/zoro-security-demo/lockey-share.png
 !sites/zoro-security-demo/package*.json
 !sites/zoro-security-demo/fixtures/
 !sites/zoro-security-demo/fixtures/**
