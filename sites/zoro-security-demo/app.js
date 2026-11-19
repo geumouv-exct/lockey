@@ -403,7 +403,12 @@ function setView(v, relatedNews = false){
 function showModelHelp(){dialog('Zoro-1 연결 안내','<p>Trida-Stack의 Zoro-1 decision 서버를 실행하고, 이 데모 서버를 시작하기 전에 로컬 주소를 설정하세요.</p><pre>ZORO_DECIDE_URL=http://127.0.0.1:30001/v1/systemone node server.mjs</pre><p>Brev를 사용하는 경우 SSH 포트 포워딩을 먼저 연결하세요. 서버가 응답해도 실제 모델 가중치와 버전은 별도 확인이 필요합니다.</p><a href="https://huggingface.co/trillionlabs/Zoro-1" target="_blank" rel="noopener noreferrer">Zoro-1 모델 카드</a>')}
 $('#scan').addEventListener('click',async()=>{$('#five-risks').hidden=true;$('#checklist').hidden=true;$('#project-review').hidden=true;document.querySelector('.topbar b').textContent='sample-store';document.querySelector('.summary-heading h2').textContent='sample-store';document.querySelector('.summary-heading p').textContent='전자상거래 샘플 · JavaScript';document.querySelector('.summary-stats strong').textContent='가상 코드 1개';const btn=$('#scan');btn.disabled=true;btn.textContent='검사 실행 중…';$('#result-label').textContent='분석 중';try{const res=await fetch('/api/scan',{method:'POST'});const data=await res.json();if(!res.ok)throw Error(data.error||'검사를 완료하지 못했습니다.');result=data;$('#total').textContent=groupFindings(result.findings).length;$('#side-count').textContent=groupFindings(allItems()).length;$('#injection').textContent=groupFindings(result.findings.filter(f=>f.owasp==='A05')).length;$('#settings').textContent=groupFindings(result.findings.filter(f=>f.owasp==='A02')).length;$('#dynamic-count').textContent=result.dynamic.status==='skipped'?'—':result.dynamic.status==='confirmed'?'1':'0';$('#gate').textContent='판정 보류';$('#last-run').textContent=new Date(result.scan.at).toLocaleString('ko-KR');$('#result-label').textContent=result.model.status==='connected'?(result.model.model_verified?'모델 응답 확인':'부분 결과 · 모델 확인 필요'):'부분 결과 · 모델 미연결';$('#coverage-flow').textContent=result.flow?.status==='completed'?'완료':result.flow?.status==='error'?'실행 오류':'미실행';$('#coverage-flow').classList.toggle('done',result.flow?.status==='completed');$('#coverage-code').textContent='완료';$('#coverage-code').classList.add('done');$('#coverage-dynamic').textContent=result.dynamic.status==='skipped'?'미실행':'완료';$('#coverage-dynamic').classList.toggle('done',result.dynamic.status!=='skipped');$('#notice').hidden=false;$('#notice').innerHTML=result.model.model_verified?'<span>✦</span><div><strong>Zoro-1 의사결정이 완료되었습니다.</strong><p>모델이 선택한 단계를 실행했습니다. 항목별 검증 범위를 확인하세요.</p></div>':'<span>✦</span><div><strong>로컬 검사 결과를 확인하세요.</strong><p>Zoro-1 모델 신원을 확인하기 전까지 전체 검사는 미완료입니다. 패턴 검사는 취약점 후보입니다.</p></div>'; modelUI(result.model);document.body.dataset.resultMode='code';$('#link-results').hidden=true;setProjectStep('analysis');setView('overview');setFilter('all')}catch(e){$('#result-label').textContent='검사 오류';dialog('검사 오류',`<p>${escape(e.message)}</p>`)}finally{btn.disabled=false;btn.innerHTML='<span>⌁</span> 샘플 다시 검사'}});
 $$('.nav').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));$$('[data-filter]').forEach(b=>b.addEventListener('click',()=>setFilter(b.dataset.filter)));$('#notice-close').onclick=()=>$('#notice').hidden=true;$('#model-details').onclick=showModelHelp;$('#help').onclick=()=>dialog('로컬 데모 안내','<p>샘플 또는 선택한 로컬 프로젝트를 검사할 수 있습니다. 사용자가 명시적으로 실행한 프로젝트 테스트는 실제 코드와 스크립트를 실행합니다.</p><p>패턴 결과는 검토 후보입니다. Zoro-1 미연결 시 모델 판단을 표시하지 않습니다.</p>');
-fetch('/api/status').then(r=>r.json()).then(s=>modelUI(s.modelConfigured?{status:'not_connected',message:'서버 주소가 설정되어 있습니다. 검사를 실행해 연결을 확인하세요.'}:{status:'not_connected'})).catch(()=>modelUI({status:'error',message:'데모 서버에 연결할 수 없습니다.'}));
+let publicDeployment=false;
+fetch('/api/status').then(r=>r.json()).then(s=>{
+ publicDeployment=s.publicDeployment===true;
+ if(publicDeployment)$('.local-badge').lastChild.textContent=' 공개 체험';
+ modelUI(s.modelConfigured?{status:'not_connected',message:'서버 주소가 설정되어 있습니다. 검사를 실행해 연결을 확인하세요.'}:{status:'not_connected'});
+}).catch(()=>modelUI({status:'error',message:'데모 서버에 연결할 수 없습니다.'}));
 
 // User-selected files stay in browser memory and are sent only to this local server.
 let projectFiles=[],projectName='',lastChecklist=[],lastSummary=[],lastScanSnapshot=[],lastScanSelection=null;
@@ -456,6 +461,10 @@ function renderProjectReview(data){
  if(!review.proposalToken)return;
  const token=review.proposalToken,apply=$('#apply-proposal'),message=$('#apply-result'),controls=$('#test-controls');
  const select=$('#target-test'),command=$('#test-command'),run=$('#run-project-tests'),out=$('#test-result'),download=$('#patch-download');
+ if(publicDeployment){
+  for(const item of [command.closest('label'),select.closest('label'),run])item.hidden=true;
+  out.textContent='회귀 테스트는 로컬 환경에서 실행할 수 있어요.';
+ }
  const confirm=$('#apply-confirm');
  apply.onclick=async()=>{
    if(!confirm.checked){message.textContent='수정안을 먼저 확인하세요.';return}

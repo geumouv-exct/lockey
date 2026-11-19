@@ -19,3 +19,9 @@
 - **골목책방** — 동일한 검색 조건을 재현하기 위해 보도 두 건을 입력 데이터로 고정. 기사 선별과 요약은 실행 시 모델에 요청.
 
 [Lockey 실행 방법](sites/zoro-security-demo/README.md) · [시나리오별 테스트 데이터와 실행 명령](sites/zoro-security-demo/submission/README.md)
+
+## 공개 체험
+
+[Lockey 열기](https://lockey-7ikpnqdpi.gobrev.dev) · [Brev 배포 구성](deploy/brev/README.md)
+
+폴더 선택 시 지원 소스를 Lockey 서버에 전송해 점검. 실제 파일 변경은 Chrome 또는 Edge에서 수정안 확인과 쓰기 승인 후 진행.

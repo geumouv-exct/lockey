@@ -1,0 +1,40 @@
+name: lockey-public
+services:
+  web:
+    build:
+      context: ../..
+      dockerfile: deploy/brev/Dockerfile
+    network_mode: host
+    user: node
+    environment:
+      PORT: "4178"
+      PUBLIC_ORIGIN: https://${LOCKEY_PUBLIC_HOST:?set the public HTTPS hostname}
+      ZORO_DECIDE_URL: http://127.0.0.1:30001/v1/systemone
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 1g
+    cpus: 2
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m
+  caddy:
+    image: caddy:2-alpine
+    command: ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+    user: "65534:65534"
+    network_mode: host
+    environment:
+      LOCKEY_PUBLIC_HOST: ${LOCKEY_PUBLIC_HOST:?set the public HTTPS hostname}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    pids_limit: 64
+    depends_on: [web]
+    tmpfs:
+      - /config:rw,noexec,nosuid,mode=1777,size=4m
+      - /data:rw,noexec,nosuid,mode=1777,size=4m
