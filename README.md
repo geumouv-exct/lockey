@@ -4,12 +4,12 @@
 
 ## 제출 시나리오
 
-**GitHub Actions 독립 실행 3건 모두 성공** · 동일 커밋에서 실제 Zoro-1 Arena 사용 · [검증 커밋 `9dedbd2`](https://github.com/geumouv-exct/lockey/commit/9dedbd21a691be4b32cb9efc6011a96e9fc09eb9)
+**GitHub Actions 독립 실행 3건 모두 성공** · 실제 Zoro-1 Arena 사용 · [텃밭 검증 커밋 `5a05611`](https://github.com/geumouv-exct/lockey/commit/5a05611e041749444f5f6753ea5a1a1e85ffe470) · [사진동아리·책방 검증 커밋 `9dedbd2`](https://github.com/geumouv-exct/lockey/commit/9dedbd21a691be4b32cb9efc6011a96e9fc09eb9)
 
 | 시나리오 | Lockey 시연 기능 | Zoro-1 Arena 역할 | 실행 결과 | 제출용 로그 |
 | --- | --- | --- | --- | --- |
 | **느티 사진동아리** | 회의 수첩의 보안 설정 점검 → 파일별 변경 비교 → 한 번에 승인·저장 → 재점검 | 발견 위치와 소스를 바탕으로 회의록 디버그 설정(`minutes.js`)과 세션 쿠키 설정(`session.js`)의 수정안 생성 | 브라우저 격리 폴더에서 **파일 2개 일괄 수정**, 정적 점검 **2건 → 0건** | [사진동아리 실행로그](https://github.com/geumouv-exct/lockey/actions/runs/44595722238/job/135813310360) |
-| **모퉁이 텃밭** | “글과 파일을 모두 올릴 수 있다”는 설문 답변을 텃밭 작업 기록 폼과 대조 | 설문과 코드에서 찾은 근거를 바탕으로 점검 대상 추천 여부 판단 | 글 입력란만 확인. 답변을 ‘글만’으로 정정한 뒤 **부분 일치 → 일치**. 모델 판단은 두 차례 모두 **추천 보류** | [텃밭 실행로그](https://github.com/geumouv-exct/lockey/actions/runs/44595722055/job/135813309282) |
+| **모퉁이 텃밭** | 같은 설문으로 작업 수첩 스크립트 1개 → 전체 프로젝트 3개 제공 | 로그인·본인 당번표·글 입력에 대한 설문과 소스 근거를 바탕으로 점검 대상 선택 | 근거 미확인 시 **추천 보류** → 세 항목 모두 파일·행 단위로 확인된 뒤 **로컬 폴더 점검 추천** → 3개 파일 점검, 정적 발견 0건 | [텃밭 실행로그](https://github.com/geumouv-exct/lockey/actions/runs/44601387590/job/135833436740) |
 | **골목책방** | PHP 보안 뉴스 기간 검색 → 같은 사건의 보도 통합 → 선택 기사로 내 프로젝트 점검 프롬프트 생성 | PHP가 주제인 이슈 선별, 초보자용 헤드라인과 프로젝트에서 확인할 사항 요약 | 보관 보도 **2건 → 이슈 1건**, 점검 프롬프트에 두 출처 포함. 같은 검색어로 직전 주 조회 시 **0건** | [책방 실행로그](https://github.com/geumouv-exct/lockey/actions/runs/44595722081/job/135813309260) |
 
 ## 실행 환경

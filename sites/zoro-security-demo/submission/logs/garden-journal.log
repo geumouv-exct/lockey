@@ -1,7 +1,11 @@
-START 2026-11-19T18:56:38.979Z garden-journal
-설문 both → partial · 글·댓글 작성 (index.html:12)
-Zoro-1 점검 대상 판단 deferred 추천 보류
-설문 text → matched · 글·댓글 작성 (index.html:12)
-Zoro-1 점검 대상 판단 deferred 추천 보류
-정정한 설문으로 소스 2 개 점검 · 정적 발견 0건
-PASS 2026-11-19T18:56:39.495Z garden-journal
+START 2026-11-19T19:44:33.477Z garden-journal
+두 단계에서 같은 설문 사용 · 비밀번호 로그인 / 본인 당번표 / 작업 기록 작성
+① 작업 수첩 스크립트만 제공 · journal.js · 설문 기능 3개 모두 미확인
+Zoro-1 실제 응답: deferred
+② 전체 프로젝트 제공 · index.html, journal.js, member-desk.mjs
+matched · 비밀번호 로그인 · index.html:20
+matched · 소유자 ID 비교 · member-desk.mjs:42
+matched · 글·댓글 작성 · index.html:12
+Zoro-1 실제 응답: recommended folder
+추천된 로컬 폴더 점검 실행 · 소스 3 개 · 정적 발견 0 건
+PASS 2026-11-19T19:44:34.282Z garden-journal
