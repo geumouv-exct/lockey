@@ -139,9 +139,7 @@ test('직접 입력한 검색어로 연간 목록을 판정하고 근거가 있�
     const input = JSON.parse(JSON.parse(options.body).messages[1].content);
     if (!input.articles) return reply(explanation);
     decisions.push(input);
-    const matches = input.articles.filter(a=>a.title.startsWith('Missing')).map(a=>({n:a.n,quote:'Missing login check'}));
-    matches.push({n:1,quote:'invented source text'});
-    return reply({matches});
+    return reply(Object.fromEntries(input.articles.map(a => [a.n,a.title.startsWith('Missing') ? 'Missing login check' : 'invented source text'])));
   };
   const load = createSecurityNews({now,url,expectedRevision:'expected',fetcher});
   const first = await load({keyword:'  ' + keyword + '  '});
@@ -161,7 +159,7 @@ test('직접 입력한 검색어로 연간 목록을 판정하고 근거가 있�
 test('검색 판정에 실패하면 결과를 섞지 않고 다시 검색할 수 있다', async () => {
   let model='unexpected';
   const fetcher = async (address, options) => !options.method ? Response.json(catalog) :
-    Response.json({model,choices:[{message:{content:'{"matches":[]}'}}]});
+    Response.json({model,choices:[{message:{content:JSON.stringify(Object.fromEntries(JSON.parse(JSON.parse(options.body).messages[1].content).articles.map(a=>[a.n,''])))}}]});
   const load = createSecurityNews({now,url,expectedRevision:'expected',fetcher});
   await assert.rejects(load({keyword:'비밀키 유출'}),/검색을 마치지/);
   model='expected';
@@ -174,7 +172,7 @@ test('선택 기간의 양 끝을 포함하고 모델에는 해당 공지만 전
   const fetcher = async (address,options) => {
     if (!options.method) return Response.json(catalog);
     articles = JSON.parse(JSON.parse(options.body).messages[1].content).articles;
-    return Response.json({model:'expected',choices:[{message:{content:'{"matches":[]}'}}]});
+    return Response.json({model:'expected',choices:[{message:{content:JSON.stringify(Object.fromEntries(JSON.parse(JSON.parse(options.body).messages[1].content).articles.map(a=>[a.n,''])))}}]});
   };
   const load = createSecurityNews({now,url,expectedRevision:'expected',fetcher});
   const dates = {startDate:'2026-01-02',endDate:'2026-01-04'};
@@ -248,4 +246,64 @@ test('CVE 없는 같은 사건은 한 번 요약하고 두 매체의 근거를 �
   const old=await load({startDate:'2026-01-08',endDate:'2026-01-08'});
   assert.equal(old.items[0].sources.length,1);assert.equal(old.items[0].date,'2026-01-08');
   const {newsAssessmentPrompt}=await import('./project-news.mjs');assert.ok(!newsAssessmentPrompt(row).includes(row.id));
+});
+
+test('연간 검색은 한글 검색어의 영문 별칭으로 후보를 좁힌 뒤 기사별 원문 근거를 확인한다', async () => {
+  const feed = structuredClone(catalog);
+  feed.vulnerabilities = Array.from({length:24}, (_,i) => ({
+    ...catalog.vulnerabilities[0], cveID:'CVE-2025-'+(9000+i),
+    vulnerabilityName:i < 3 ? 'ExampleOS update '+i : 'Other product update '+i
+  }));
+  const calls = [];
+  const fetcher = async (address,options) => {
+    if (!options.method) return Response.json(feed);
+    const input = JSON.parse(JSON.parse(options.body).messages[1].content);
+    calls.push(input);
+    let result = explanation;
+    if (input.articles) {
+      assert.equal(input.articles.length,3);
+      result = {'1':'ExampleOS','2':'invented quote','3':''};
+    } else if (input.keyword) result = {terms:['ExampleOS']};
+    return Response.json({model:'expected',choices:[{message:{content:JSON.stringify(result)}}]});
+  };
+  const load = createSecurityNews({now,url,expectedRevision:'expected',fetcher});
+  assert.equal((await load({keyword:'예시 운영체제'})).total,1);
+  assert.equal(calls.filter(v=>v.keyword).length,2);
+  assert.equal((await load({keyword:'cve-2025-9020'})).items[0].id,'CVE-2025-9020');
+  assert.equal(calls.filter(v=>v.keyword).length,2);
+});
+
+test('긴 뉴스 검색은 짧은 요청으로 이어 받아 한 번만 판정하고 예외도 전달한다',async () => {
+  const {createNewsSearchJobs} = await import('./news-search-jobs.mjs');
+  let finish, calls=0;
+  const read = createNewsSearchJobs(() => {calls++; return new Promise(resolve => {finish=resolve;});},2);
+  const pending = await read({keyword:'제품'});
+  assert.equal(pending.status,202);
+  assert.deepEqual(await read(pending.data),pending);
+  finish({total:2});
+  assert.deepEqual(await read(pending.data),{status:200,data:{total:2}});
+  assert.equal(calls,1);
+  await assert.rejects(read(pending.data),/만료/);
+  const failed = createNewsSearchJobs(async () => {throw Error('뉴스 조회 실패');});
+  assert.deepEqual(await failed({keyword:'제품'}),{status:400,data:{error:'뉴스 조회 실패'}});
+});
+
+test('빈 검색은 선택 기간의 최신 10건을 5건씩 보여주고 식별자 검색은 이전 기사도 찾는다', async () => {
+  const feed = structuredClone(catalog);
+  feed.vulnerabilities=Array.from({length:15},(_,i)=>({...catalog.vulnerabilities[0],
+    dateAdded:'2025-12-'+String(i+1).padStart(2,'0'),cveID:'CVE-2025-'+(9100+i),cwes:['CWE-79']}));
+  const fetcher=async (address,options)=>options.method
+    ? Response.json({model:'expected',choices:[{message:{content:JSON.stringify(explanation)}}]})
+    : Response.json(feed);
+  const load=createSecurityNews({now,url,expectedRevision:'expected',fetcher});
+  const first=await load(),second=await load({keyword:'  ',page:2});
+  assert.equal(first.total,10);
+  assert.equal(first.pages,2);
+  assert.deepEqual([first.items.length,second.items.length],[5,5]);
+  assert.deepEqual([...first.items,...second.items].map(i=>i.id),feed.vulnerabilities.slice(-10).reverse().map(i=>i.cveID));
+  const smaller=await load({startDate:'2025-12-03',endDate:'2025-12-05'});
+  assert.equal(smaller.total,3);
+  assert.equal(smaller.pages,1);
+  assert.equal((await load({keyword:'CWE-79'})).total,15);
+  assert.equal((await load({keyword:'CVE-2025-9100'})).total,1);
 });

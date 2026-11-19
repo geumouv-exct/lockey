@@ -168,6 +168,9 @@ function attachAiRepair(f,box){
 
 async function postJson(url,input){
  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input)});
+ if (!res.headers.get('Content-Type')?.includes('application/json')) {
+   throw Error(res.status === 524 || res.status === 504 ? '서버 응답 시간이 길어졌어요. 잠시 후 다시 시도해 주세요.' : '서버 응답을 확인할 수 없어요. 잠시 후 다시 시도해 주세요.');
+ }
  const data=await res.json();
  if(!res.ok)throw Error(data.error||'요청을 완료하지 못했습니다.');
  return data;
@@ -316,11 +319,15 @@ async function loadSecurityNews(page = 1, reset = false) {
       }
     }
     const query = context ? {scope:'project', cwes:[...context.types.keys()], cves:[...context.advisories.keys()], page} : {scope:'all', page, keyword, ...newsDates};
-    const data = await postJson('/api/security-news', query);
+    if (!related) query.asyncSearch = true;
+    let data = await postJson('/api/security-news', query);
+    while (data.searchId && sequence === newsRequest) {
+      data = await postJson('/api/security-news', {searchId:data.searchId});
+    }
     if (sequence !== newsRequest) return;
     const open = new Map([...list.children].map(card => [card.dataset.id, (card.querySelector('details') || card).open]));
     list.replaceChildren(...data.items.map((item,i) => newsCard(item, open.get(item.id) ?? (i === 0), context)));
-    status.textContent = data.total ? (keyword ? '‘' + keyword + '’ 검색 결과 ' : related ? '최근 2개월 관련 공지 ' : newsDates ? '선택 기간 이슈 ' : '최근 1년 이슈 ') + data.total.toLocaleString('ko-KR') + '건' + (data.period ? ' · ' + data.period.start + ' ~ ' + data.period.end : '') + (related && data.released ? ' · CISA 목록 갱신 ' + data.released.slice(0,10) : '') + (data.modelMessage ? ' · ' + data.modelMessage : '')
+    status.textContent = data.total ? (keyword ? '‘' + keyword + '’ 검색 결과 ' : related ? '최근 2개월 관련 공지 ' : '최신 보안 이슈 ') + data.total.toLocaleString('ko-KR') + '건' + (data.period ? ' · ' + data.period.start + ' ~ ' + data.period.end : '') + (related && data.released ? ' · CISA 목록 갱신 ' + data.released.slice(0,10) : '') + (data.modelMessage ? ' · ' + data.modelMessage : '')
       : (keyword ? '선택한 기간에 ‘' + keyword + '’을 주로 다룬 뉴스를 찾지 못했어요.' : related ? '최근 2개월 동안 CISA 목록에 추가된 공지 중 이번 분석과 관련된 기사가 없어요.' : '선택한 기간에 표시할 보안 뉴스가 없어요.');
     if (data.sourceNotice) status.textContent += ' · ' + data.sourceNotice;
     newsPage = data.page;
@@ -381,7 +388,7 @@ function setView(v, relatedNews = false){
     $('#news-title').textContent = relatedNews ? '내 프로젝트 관련 보안 뉴스' : '전체 보안 뉴스';
     $('#news-description').textContent = relatedNews
       ? '최근 2개월 동안 CISA 목록에 추가된 공지에서 내 프로젝트와 관련된 사례를 최신순으로 보여줘요. 같은 유형이어도 영향을 받는 제품은 다를 수 있어요.'
-      : '최근 1년의 보안 보도와 CISA 공지를 모았어요. 같은 이슈의 후속 보도는 한 번만 보여줘요.';
+      : '최신 이슈 10건을 보여줘요. 검색하면 최근 1년의 보안 보도와 CISA 공지에서 찾을 수 있어요.';
     $('#news-back').hidden = !relatedNews;
     $('#news-search').hidden = relatedNews;
     if (!relatedNews) { showNewsDates(); $('#news-keyword').value = newsKeyword; }

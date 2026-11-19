@@ -211,5 +211,5 @@ export function mergeNews(advisories, reports, period) {
     row.sources=[...unique.values()];
     items.push(row);
   }
-  return items.sort((a,b)=>b.date.localeCompare(a.date)||Number(!!b.reportUrl)-Number(!!a.reportUrl)||a.id.localeCompare(b.id));
+  return items.sort((a,b)=>b.date.localeCompare(a.date)||(b.published||'').localeCompare(a.published||'')||Number(!!b.reportUrl)-Number(!!a.reportUrl)||a.id.localeCompare(b.id));
 }

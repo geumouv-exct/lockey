@@ -215,6 +215,7 @@ export function createSecurityNews({url, expectedRevision, fetcher=fetch, timeou
     }
     keyword = keyword.trim();
     if (keyword) matches = await searchTopic(matches, keyword);
+    else if (scope === 'all') matches = matches.slice(0,10);
     const total = matches.length, pages = Math.ceil(total/pageSize);
     page = Math.min(page, pages || 1);
     const slice = matches.slice((page-1)*pageSize, page*pageSize);
