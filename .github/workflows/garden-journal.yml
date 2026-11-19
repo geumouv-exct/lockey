@@ -3,11 +3,16 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      garden_runner:
+        description: Use a dedicated garden scenario runner
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   scenario:
-    runs-on: [self-hosted, lockey-public-scenarios]
+    runs-on: [self-hosted, "${{ inputs.garden_runner && 'lockey-garden-scenario' || 'lockey-public-scenarios' }}"]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683

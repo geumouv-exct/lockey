@@ -93,20 +93,41 @@ async function teamNotes() {
 
 async function gardenJournal() {
   const files = await sources('garden-journal');
-  const profile = { login: { answer: 'no' }, private: { answer: 'no' }, input: { answer: 'unknown', detail: 'both' } };
-  for (const expected of ['partial', 'matched']) {
-    const report = await api('target-recommendation', { files, serviceProfile: profile });
-    const input = report.checks.find(check => check.feature === 'input');
-    assert.equal(input.status, expected);
-    assert.ok(input.observations.some(o => o.signal === 'text' && o.path === 'index.html'));
-    console.log('설문', input.detail, '→', input.status, '·', input.observations.map(o => o.label + ' (' + o.path + ':' + o.line + ')').join(', '));
-    assert.ok(['recommended','deferred'].includes(report.status), 'Zoro-1 추천 응답 필요');
-    console.log('Zoro-1 점검 대상 판단', report.status, report.choice || '추천 보류');
-    profile.input = { answer: 'yes', detail: 'text' };
+  const serviceProfile = {
+    login: { answer: 'yes', detail: 'password' },
+    private: { answer: 'yes', detail: 'owner' },
+    input: { answer: 'yes', detail: 'text' }
+  };
+  console.log('두 단계에서 같은 설문 사용 · 비밀번호 로그인 / 본인 당번표 / 작업 기록 작성');
+
+  const partialFiles = files.filter(file => file.path === 'journal.js');
+  assert.equal(partialFiles.length, 1);
+  const partial = await api('target-recommendation', { files: partialFiles, serviceProfile });
+  assert.equal(partial.readableFiles, 1);
+  assert.deepEqual(partial.checks.map(check => check.status), ['unconfirmed', 'unconfirmed', 'unconfirmed']);
+  assert.ok(partial.checks.every(check => check.observations.length === 0));
+  console.log('① 작업 수첩 스크립트만 제공 · journal.js · 설문 기능 3개 모두 미확인');
+  console.log('Zoro-1 실제 응답:', partial.status, partial.choice ?? '');
+  assert.equal(partial.status, 'deferred', '근거 부족 단계에서 모델이 추천을 보류해야 함');
+
+  const full = await api('target-recommendation', { files, serviceProfile });
+  console.log('② 전체 프로젝트 제공 ·', files.map(file => file.path).join(', '));
+  for (const [feature, signal, path] of [
+    ['login', 'password', 'index.html'], ['private', 'owner', 'member-desk.mjs'], ['input', 'text', 'index.html']
+  ]) {
+    const check = full.checks.find(check => check.feature === feature);
+    assert.equal(check?.status, 'matched');
+    const observation = check.observations.find(o => o.source === 'source' && o.signal === signal && o.path === path);
+    assert.ok(observation?.line > 0, feature + '의 실제 파일과 행 번호 필요');
+    console.log(check.status, '·', observation.label, '·', path + ':' + observation.line);
   }
-  const scan = await api('project-scan', { projectName: 'garden-journal', snapshot: files, files: files.map(({ path }) => ({ path })), serviceProfile: profile });
+  console.log('Zoro-1 실제 응답:', full.status, full.choice ?? '');
+  assert.equal(full.status, 'recommended');
+  assert.equal(full.choice, 'folder', '전체 소스 근거를 바탕으로 로컬 폴더 점검을 추천해야 함');
+  const scan = await api('project-scan', { projectName: 'garden-journal', snapshot: files, files: files.map(({ path }) => ({ path })), serviceProfile });
+  assert.equal(scan.scan.files, files.length);
   assert.equal(scan.findings.length, 0);
-  console.log('정정한 설문으로 소스', scan.scan.files, '개 점검 · 정적 발견 0건');
+  console.log('추천된 로컬 폴더 점검 실행 · 소스', scan.scan.files, '개 · 정적 발견', scan.findings.length, '건');
 }
 
 // Replay only the two saved publisher feeds. All model calls go to the configured Zoro-1.

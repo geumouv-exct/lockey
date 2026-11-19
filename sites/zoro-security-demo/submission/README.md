@@ -3,7 +3,7 @@
 | 프로젝트 | 시연할 장면 | 실행 결과 |
 | --- | --- | --- |
 | [느티 사진동아리](fixtures/team-notes) | 두 파일의 Zoro-1 수정안을 비교하고 한 번에 승인한 뒤 재점검 | [Chrome 실행로그](logs/team-notes.log) |
-| [모퉁이 텃밭](fixtures/garden-journal) | “글과 파일을 모두 올릴 수 있나요?”라는 답을 실제 입력 폼과 대조하고 “글만”으로 정정 | [설문과 소스 대조 로그](logs/garden-journal.log) |
+| [모퉁이 텃밭](fixtures/garden-journal) | 같은 설문으로 작업 수첩 스크립트만 제공한 뒤 전체 소스를 제공해 Zoro-1의 추천 보류와 로컬 폴더 점검 추천을 비교 | [설문과 소스 대조 로그](logs/garden-journal.log) |
 | [골목책방](fixtures/corner-books) | 이달의 책과 낭독회를 소개하는 PHP 사이트 운영자가 PHP 뉴스를 검색하고 기사별 프로젝트 점검 프롬프트 생성 | [검색·요약·프롬프트 로그](logs/corner-books.log) |
 
 ## 다시 실행하기
