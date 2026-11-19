@@ -1,6 +1,11 @@
-START 2026-11-19T18:56:27.680Z team-notes
-점검 결과 session.js · cookie-httponly-false, minutes.js · debug-enabled
-Zoro-1 수정안 생성 minutes.js, session.js
-브라우저 격리 폴더에 한 번 승인하여 저장한 파일 minutes.js, session.js
+START 2026-11-19T20:21:41.748Z team-notes
+설문: 예 / 예 / 예 · 비밀번호 로그인 / 작성자 본인 / 글이나 댓글 → Zoro-1 로컬 폴더 추천
+점검 결과 gallery-delivery.js · tls-disabled, exhibition-calendar.js · sql-interpolation
+CWE-89 대표 뉴스: Arista의 VeloCloud Orchestrator(VCO)에서 SQL 인젝션 취약점이 발견되어 공격자가 악용하고 있습니다 https://thehackernews.com/2026/10/arista-warns-of-critical-velocloud-sql.html
+코드 비교: exhibition-calendar.js
+CWE-295 대표 뉴스: Check Point Multiple Products에서 다른 사람이 원하는 프로그램을 실행할 수 있어요 https://www.cve.org/CVERecord?id=CVE-2026-85102
+코드 비교: gallery-delivery.js
+Zoro-1 수정안 생성 exhibition-calendar.js, gallery-delivery.js
+브라우저 격리 폴더에 한 번 승인하여 저장한 파일 exhibition-calendar.js, gallery-delivery.js
 재점검 0건 · 수정 완료 화면 확인
-PASS 2026-11-19T18:56:38.699Z team-notes
+PASS 2026-11-19T20:22:09.153Z team-notes

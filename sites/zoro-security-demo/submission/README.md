@@ -2,7 +2,7 @@
 
 | 프로젝트 | 시연할 장면 | 실행 결과 |
 | --- | --- | --- |
-| [느티 사진동아리](fixtures/team-notes) | 두 파일의 Zoro-1 수정안을 비교하고 한 번에 승인한 뒤 재점검 | [Chrome 실행로그](logs/team-notes.log) |
+| [느티 사진동아리](fixtures/team-notes) | SQL 값 결합·TLS 설정에 대한 대표 뉴스와 코드를 확인하고 두 파일을 일괄 수정한 뒤 재점검 | [GitHub Actions 실행 로그](https://github.com/geumouv-exct/lockey/actions/runs/44607798121/job/135856046043) · [실행 로그 발췌](logs/team-notes.log) |
 | [모퉁이 텃밭](fixtures/garden-journal) | 같은 설문으로 작업 수첩 스크립트만 제공한 뒤 전체 소스를 제공해 Zoro-1의 추천 보류와 로컬 폴더 점검 추천을 비교 | [GitHub Actions 실행 로그](https://github.com/geumouv-exct/lockey/actions/runs/44601387590/job/135833436740) · [실행 로그 발췌](logs/garden-journal.log) |
 | [골목책방](fixtures/corner-books) | 이달의 책과 낭독회를 소개하는 PHP 사이트 운영자가 PHP 뉴스를 검색하고 기사별 프로젝트 점검 프롬프트 생성 | [검색·요약·프롬프트 로그](logs/corner-books.log) |
 
