@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: valid signed token is accepted
+ok 1 - valid signed token is accepted
+  ---
+  duration_ms: 2.648
+  type: 'test'
+  ...
+# Subtest: wrong-signature token is rejected
+ok 2 - wrong-signature token is rejected
+  ---
+  duration_ms: 1.27725
+  type: 'test'
+  ...
+# Subtest: expired token is rejected
+ok 3 - expired token is rejected
+  ---
+  duration_ms: 0.638833
+  type: 'test'
+  ...
+# Subtest: token from an unexpected issuer is rejected
+ok 4 - token from an unexpected issuer is rejected
+  ---
+  duration_ms: 0.253666
+  type: 'test'
+  ...
+# Subtest: token without an expiration is rejected
+ok 5 - token without an expiration is rejected
+  ---
+  duration_ms: 0.692042
+  type: 'test'
+  ...
+# Subtest: token signed with a different algorithm is rejected
+ok 6 - token signed with a different algorithm is rejected
+  ---
+  duration_ms: 0.241916
+  type: 'test'
+  ...
+# Subtest: session cookie options require Secure and HttpOnly
+ok 7 - session cookie options require Secure and HttpOnly
+  ---
+  duration_ms: 0.118416
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 122.070584

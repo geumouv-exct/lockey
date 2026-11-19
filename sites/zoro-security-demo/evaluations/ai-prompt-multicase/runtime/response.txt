@@ -1,0 +1,11 @@
+요청한 두 보안 수정을 적용했고, 관련 회귀 테스트 4개가 모두 통과했습니다.
+
+- [src/parser.mjs](/private/tmp/trace-ai-multi/runtime/src/parser.mjs)에서 `eval`을 제거했습니다. 유한한 숫자와 십진수 문자열을 허용하고, 숫자 범위는 `±Number.MAX_SAFE_INTEGER`로 정했습니다. 기존 정상 사례인 `'12'`와 소수·지수 표기가 처리되고, 코드 형태의 입력과 범위를 벗어난 값은 거부되는지 확인했습니다.
+- [src/request.mjs](/private/tmp/trace-ai-multi/runtime/src/request.mjs)에서 요청 대상을 기존 테스트에 명시된 `https://api.example.test`로 제한했습니다. 연결에 사용되는 DNS 결과에서 내부·예약 주소를 걸러내고, 허용되는 주소가 없으면 요청을 실패시킵니다. Needle의 자동 리다이렉트와 프록시 사용도 비활성화했습니다. [Needle 설정과 구현](https://github.com/tomas/needle/blob/master/lib/needle.js)
+- [test/security.test.mjs](/private/tmp/trace-ai-multi/runtime/test/security.test.mjs)에 숫자 형식과 범위, 허용 오리진, 내부 주소 차단, 리다이렉트 설정을 검증하는 회귀 테스트를 작성했습니다.
+
+**실행 결과**  
+`node --test --test-name-pattern`으로 관련 테스트 4개가 모두 통과했습니다. `npm test`는 4개 통과, 1개 실패였습니다. 실패한 기존 명령 실행 테스트는 [src/command.mjs](/private/tmp/trace-ai-multi/runtime/src/command.mjs:1)가 테스트의 셸 대역을 호출해 `shell was used` 오류를 반환한 경우입니다.
+
+**검증 범위**  
+DNS 필터링과 리다이렉트 차단 설정은 테스트 대역으로 확인했습니다. 프로젝트에 Needle 의존성이 선언되어 있지 않아 실제 HTTP 3xx 응답을 통한 통합 동작과 배포 환경의 악용 가능성은 확인하지 못했습니다.

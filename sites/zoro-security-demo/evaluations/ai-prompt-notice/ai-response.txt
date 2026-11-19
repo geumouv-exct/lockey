@@ -1,0 +1,7 @@
+[src/notice.mjs](/private/tmp/trace-ai-prompt-eval/work/src/notice.mjs:5)에서 `innerHTML`을 `textContent`로 교체했습니다. 공지 문구를 일반 텍스트로 설정하고 긴급 공지의 CSS 클래스는 기존대로 적용합니다.
+
+[test/notice.test.mjs](/private/tmp/trace-ai-prompt-eval/work/test/notice.test.mjs:14)에 일반 공지의 문구와 기본 CSS 클래스를 확인하는 회귀 테스트를 추가했습니다. 기존 긴급 공지 테스트는 꺾쇠가 포함된 `점검 <안내>`가 `textContent`에 그대로 저장되는지 확인합니다.
+
+`npm test` 실행 결과, 수정 전에는 기존 테스트 1개가 실패했고 수정 후에는 2개 모두 통과했습니다.
+
+프로젝트에서 `renderNotice` 호출은 테스트에서만 확인했습니다. 실제 방문자 입력이 함수에 도달하는 경로와 악용 가능성은 확인하지 못했습니다. 테스트는 일반 객체에 설정된 속성을 검사했으며, 브라우저 렌더링은 검증 범위에 포함되지 않았습니다.

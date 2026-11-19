@@ -1,0 +1,35 @@
+name: "Lockey · 사진동아리 · 일괄 수정 및 재점검"
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scenario:
+    runs-on: [self-hosted, lockey-public-scenarios]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Install locked dependencies
+        working-directory: sites/zoro-security-demo
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix submission --ignore-scripts --no-audit --no-fund
+      - name: "Run team-notes with Zoro-1"
+        working-directory: sites/zoro-security-demo
+        env:
+          CHROME_CHANNEL: chromium
+          PORT: '4768'
+          ZORO_DECIDE_URL: http://127.0.0.1:30001/v1/systemone
+        run: |
+          node server.mjs &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:4768/api/status >/dev/null; then break; fi
+            sleep 1
+          done
+          node submission/run-scenario.mjs team-notes

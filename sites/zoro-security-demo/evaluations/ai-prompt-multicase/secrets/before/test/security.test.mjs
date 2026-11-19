@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {configuredPassword} from '../src/credentials.mjs';
+test('credential is supplied by server environment',()=>{const old=process.env.TRACE_DEMO_PASSWORD;process.env.TRACE_DEMO_PASSWORD='injected-test-value';try{assert.equal(configuredPassword(),'injected-test-value')}finally{if(old===undefined)delete process.env.TRACE_DEMO_PASSWORD;else process.env.TRACE_DEMO_PASSWORD=old}});

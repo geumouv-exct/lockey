@@ -1,0 +1,8 @@
+권한 검사 중 예외가 발생하면 `canRead`가 `false`를 반환해 접근을 차단하도록 수정했습니다. 정상적으로 검사가 끝나면 소유자는 허용되고 다른 사용자는 거부되는 기존 동작을 유지합니다.
+
+- [src/access.mjs](/private/tmp/trace-ai-multi/access/src/access.mjs:2)에서 예외 처리의 반환값을 `true`에서 `false`로 변경했습니다.
+- [test/security.test.mjs](/private/tmp/trace-ai-multi/access/test/security.test.mjs:3)에서 권한 검사 함수가 예외를 던질 때 `false`가 반환되는지 확인하는 기존 회귀 테스트를 정리했습니다.
+
+`npm test`를 수정 전후로 실행했습니다. 수정 전에는 예외 처리 테스트가 실패했고, 수정 후에는 예외 처리와 정상 권한 판단 테스트가 모두 통과했습니다(2건 통과, 0건 실패).
+
+실제 배포 환경에서의 악용 가능성과 악용 이력은 확인하지 않았습니다.

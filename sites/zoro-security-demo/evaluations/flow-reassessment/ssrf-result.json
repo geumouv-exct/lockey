@@ -1,0 +1,14 @@
+{
+  "before": {
+    "exit": 1,
+    "tests": 1,
+    "pass": 0,
+    "fail": 1
+  },
+  "after": {
+    "exit": 0,
+    "tests": 1,
+    "pass": 1,
+    "fail": 0
+  }
+}

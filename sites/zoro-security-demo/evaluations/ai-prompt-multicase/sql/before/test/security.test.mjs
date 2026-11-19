@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {findUser} from '../src/service.mjs';
+test('user input is bound separately and a normal query keeps its value',()=>{let call; const db={query:(...args)=>(call=args,[])};findUser(db,{query:{name:'Alice'}});assert.match(call[0],/\?/);assert.deepEqual(call[1],['Alice']);});
+test('a quoted value remains data and cannot modify SQL structure',()=>{let call;const db={query:(...args)=>(call=args,[])};const input="O'Reilly";findUser(db,{query:{name:input}});assert.ok(!call[0].includes(input));assert.deepEqual(call[1],[input]);});

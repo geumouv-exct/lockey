@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: owner allowed and other user denied
+ok 1 - owner allowed and other user denied
+  ---
+  duration_ms: 0.636292
+  type: 'test'
+  ...
+# Subtest: authorization service errors deny access
+ok 2 - authorization service errors deny access
+  ---
+  duration_ms: 0.081125
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 98.421625

@@ -1,0 +1,58 @@
+{
+  "findings": [],
+  "osv": {
+    "status": "completed",
+    "checked": 1,
+    "omitted": 0,
+    "detailsIncomplete": false,
+    "packages": [
+      {
+        "name": "lodash",
+        "version": "4.17.21",
+        "advisories": [
+          "GHSA-r5fr-rjxr-66jc",
+          "GHSA-xxjr-mmjv-4gpg"
+        ],
+        "details": [
+          {
+            "id": "GHSA-r5fr-rjxr-66jc",
+            "cvss": [
+              {
+                "version": "3.1",
+                "score": 8.1,
+                "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H"
+              }
+            ],
+            "cves": [
+              "CVE-2026-4800"
+            ],
+            "fixed": [
+              "4.18.0"
+            ],
+            "available": true
+          },
+          {
+            "id": "GHSA-xxjr-mmjv-4gpg",
+            "cvss": [
+              {
+                "version": "3.1",
+                "score": 6.5,
+                "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L"
+              }
+            ],
+            "cves": [
+              "CVE-2025-13465"
+            ],
+            "fixed": [
+              "4.17.23"
+            ],
+            "available": true
+          }
+        ]
+      }
+    ],
+    "source": "https://osv.dev/",
+    "note": "잠금 파일에 기록된 버전과 공개 권고를 대조했습니다. 실제 설치·호출 여부와 악용 가능성은 별도 확인이 필요합니다."
+  },
+  "model": "not_needed"
+}

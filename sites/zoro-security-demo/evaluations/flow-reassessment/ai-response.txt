@@ -1,0 +1,8 @@
+`status`만 허용하고, `/usr/bin/uptime`을 셸 없이 직접 실행하도록 CWE-78 지적 사항을 수정했습니다.
+
+- [src/command.mjs](/private/tmp/trace-flow-round2/work/src/command.mjs)에서 기존 함수의 인자 순서와 반환 방식을 유지했습니다. 실행 파일 경로와 빈 인자 배열을 `execFile`에 별도로 전달하고 `shell: false`를 명시했습니다. 허용 목록에 없는 입력은 프로세스 실행 전에 `TypeError`로 거부합니다.
+- [test/security.test.mjs](/private/tmp/trace-flow-round2/work/test/security.test.mjs:23)에서 `status`의 실행 경로와 옵션을 검증하고, 세미콜론·파이프·앰퍼샌드·줄바꿈이 포함된 입력이 실행 함수에 도달하기 전에 거부되는지 확인했습니다.
+
+수정 전 `npm test`는 5개 중 1개가 실패했고, 수정 후에는 **6개 모두 통과**했습니다. 로컬에서 Node.js의 실제 `execFile`로 `status`를 실행해 `uptime` 출력도 확인했습니다.
+
+프로젝트 내에서 테스트 외 호출부는 찾지 못했습니다. 기존 코드의 실제 악용 여부와 배포 환경에서의 동작은 확인하지 않았습니다.

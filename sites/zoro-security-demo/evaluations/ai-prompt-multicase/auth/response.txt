@@ -1,0 +1,8 @@
+세 항목을 수정했고, 기본 환경과 운영 환경 설정에서 회귀 테스트 7개가 모두 통과했습니다.
+
+- [src/session.mjs](/private/tmp/trace-ai-multi/auth/src/session.mjs)에서 모든 환경의 인증 쿠키 옵션에 `Secure`와 `HttpOnly`를 활성화하고 `SameSite=Lax`를 유지했습니다. 토큰 인증은 `jwt.verify`로 변경해 서명, 발급자, 만료를 검증합니다. 허용 알고리즘 `HS256`과 발급자 `trace-eval`은 기존 테스트의 토큰 발급 설정을 따랐습니다.
+- [test/security.test.mjs](/private/tmp/trace-ai-multi/auth/test/security.test.mjs)에서 정상 토큰 허용, 잘못된 서명 및 만료 토큰 거부, 쿠키 옵션을 확인했습니다. 다른 발급자, 만료 시각 누락, 다른 알고리즘을 거부하는 테스트를 추가했습니다.
+
+수정 전 `npm test`는 1개 통과, 3개 실패했습니다. 수정 후 `npm test`와 `NODE_ENV=production npm test`는 각각 7개 통과, 0개 실패했습니다.
+
+저장소에 HTTPS 로그인 엔드포인트나 쿠키 발급 코드가 없어 실제 로그인 응답의 `Set-Cookie` 헤더는 확인하지 못했습니다. 운영 토큰의 실제 발급 설정과 배포 환경에서의 악용 가능성도 확인 범위에 포함되지 않았습니다.

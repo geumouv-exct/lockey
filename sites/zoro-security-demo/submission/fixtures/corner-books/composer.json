@@ -1,0 +1,6 @@
+{
+  "name": "corner-books/shelf",
+  "description": "골목책방의 이달의 책과 낭독회 일정",
+  "type": "project",
+  "require": { "php": "^8.2" }
+}

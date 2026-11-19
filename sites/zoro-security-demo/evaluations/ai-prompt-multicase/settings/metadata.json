@@ -1,0 +1,78 @@
+{
+  "findings": [
+    {
+      "id": "debug-enabled",
+      "agent": "phase2",
+      "owasp": "A02",
+      "path": "src/config.mjs",
+      "lines": [
+        2
+      ],
+      "title": "디버그 설정을 확인해 주세요",
+      "severity": "확인 필요",
+      "why": "운영 환경에 개발용 디버그 설정이 적용되면 내부 정보가 노출될 수 있습니다.",
+      "fix": "이 설정이 운영 환경에 적용되는지 확인하세요.",
+      "status": "candidate",
+      "key": "issue-1",
+      "category": "디버그 설정을 확인해 주세요",
+      "reference": "https://cheatsheetseries.owasp.org/",
+      "wstg": "WSTG-v42-CONF-02"
+    },
+    {
+      "id": "cors-wildcard",
+      "agent": "phase2",
+      "owasp": "A02",
+      "path": "src/config.mjs",
+      "lines": [
+        3
+      ],
+      "title": "CORS 공개 범위를 확인해 주세요",
+      "severity": "확인 필요",
+      "why": "모든 출처를 허용하는 CORS 설정은 보호가 필요한 응답에 부적합할 수 있습니다.",
+      "fix": "해당 응답의 공개 의도와 인증 방식, 필요한 출처 범위를 확인하세요.",
+      "status": "candidate",
+      "key": "issue-2",
+      "category": "CORS 공개 범위를 확인해 주세요",
+      "reference": "https://wstg.owasp.org/v4.2/4-Web_Application_Security_Testing/11-Client-side_Testing/07-Testing_Cross_Origin_Resource_Sharing/",
+      "wstg": "WSTG-v42-CLNT-07"
+    },
+    {
+      "id": "signature-disabled",
+      "agent": "phase3",
+      "owasp": "A08",
+      "path": "src/config.mjs",
+      "lines": [
+        5
+      ],
+      "title": "서명 검증을 끄는 설정을 확인해 주세요",
+      "severity": "확인 필요",
+      "why": "서명 검증을 생략하면 변조된 데이터가 신뢰될 수 있습니다.",
+      "fix": "설정이 실제 배포에 적용되는지와 별도의 서명 검증이 있는지 확인하세요.",
+      "status": "candidate",
+      "key": "issue-3",
+      "category": "서명 검증을 끄는 설정을 확인해 주세요",
+      "reference": "https://cheatsheetseries.owasp.org/",
+      "wstg": null
+    },
+    {
+      "id": "tls-disabled",
+      "agent": "phase3",
+      "owasp": "A04",
+      "path": "src/config.mjs",
+      "lines": [
+        4
+      ],
+      "title": "TLS 인증서 검증 비활성화 설정을 확인해 주세요",
+      "severity": "확인 필요",
+      "why": "연결 상대의 인증서 검증이 비활성화될 수 있습니다.",
+      "fix": "운영 환경 적용 여부를 확인하고 인증서 검증을 활성화하세요.",
+      "status": "candidate",
+      "key": "issue-4",
+      "category": "TLS 인증서 검증 비활성화 설정을 확인해 주세요",
+      "reference": "https://cheatsheetseries.owasp.org/",
+      "wstg": "WSTG-v42-CRYP-01"
+    }
+  ],
+  "osv": null,
+  "model": "not_needed"
+}

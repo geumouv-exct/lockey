@@ -1,0 +1,8 @@
+`findUser`에서 `req.query.name`을 SQL 문자열에 직접 삽입하던 부분을 바인딩 방식으로 수정했습니다.
+
+- [src/service.mjs](/private/tmp/trace-ai-multi/sql/src/service.mjs:2)에서 고정 SQL `SELECT * FROM users WHERE name = ?`와 바인딩 인자 `[req.query.name]`을 `db.query`에 따로 전달합니다. 테이블명과 열 이름은 코드에 고정되어 있습니다.
+- [test/security.test.mjs](/private/tmp/trace-ai-multi/sql/test/security.test.mjs)에서 `Alice`와 작은따옴표가 포함된 `O'Reilly`가 동일한 SQL 본문과 별도 인자로 전달되는지 검증했습니다. 정상 조회에서는 DB 모의 객체가 반환한 Promise와 결과 행이 그대로 전달되는지도 확인했습니다.
+
+`npm test`를 실행했습니다. 수정 전에는 기존 테스트 2개가 실패했고, 수정 후에는 회귀 테스트 2개가 모두 통과했습니다.
+
+프로젝트에서 `req.query.name`이 `db.query`로 전달되는 경로를 확인했습니다. HTTP 라우트와 실제 DB 드라이버 설정은 프로젝트에 없어 방문자 요청이 이 함수에 도달하는지, 실제 드라이버가 `?` 바인딩을 지원하는지, 기존 코드가 배포 환경에서 악용 가능했는지는 확인하지 못했습니다.

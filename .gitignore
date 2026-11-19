@@ -1,0 +1,20 @@
+# JavaScript dependencies and build output
+node_modules/
+.next/
+out/
+
+# Python virtual environments and cache
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local environment files; keep examples tracked
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local database files
+*.sqlite
+*.sqlite3
+*.db

@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: user input is bound separately and a normal query keeps its value
+ok 1 - user input is bound separately and a normal query keeps its value
+  ---
+  duration_ms: 1.887541
+  type: 'test'
+  ...
+# Subtest: a quoted value remains data and cannot modify SQL structure
+ok 2 - a quoted value remains data and cannot modify SQL structure
+  ---
+  duration_ms: 0.121167
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 161.411834

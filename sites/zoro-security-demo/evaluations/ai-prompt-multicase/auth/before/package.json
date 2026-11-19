@@ -1,0 +1,1 @@
+{"name":"trace-auth-eval","private":true,"type":"module","scripts":{"test":"node --test"},"dependencies":{"jsonwebtoken":"^9.0.2"}}

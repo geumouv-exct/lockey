@@ -1,0 +1,8 @@
+{
+  "name": "notice-preview",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": { "test": "node --test" },
+  "dependencies": { "clsx": "2.1.1" }
+}

@@ -1,0 +1,6 @@
+`GET /api/orders/demo`에서 인증된 사용자 ID가 주문의 소유자 ID와 일치할 때만 주문을 반환하도록 수정했습니다. 소유자는 기존과 동일한 `200` 응답과 주문 데이터를 받습니다. 다른 인증 계정에는 `403`, 미인증 요청에는 `401`을 반환하며, 두 거부 응답 모두 주문 데이터를 포함하지 않습니다.
+
+- [src/server.mjs](/private/tmp/trace-ai-multi/idor/src/server.mjs)에서 주문 반환 전에 인증과 소유권을 검사합니다.
+- [test/security.test.mjs](/private/tmp/trace-ai-multi/idor/test/security.test.mjs)에 소유자 성공, 다른 인증 계정 거부, 미인증 요청 거부를 검증하는 회귀 테스트를 작성했습니다.
+
+`npm test` 결과 하위 테스트 3개를 포함해 4개가 통과했습니다. 샌드박스에서 로컬 포트 열기가 `EPERM`으로 차단되어 실제 HTTP 연결은 확인하지 못했습니다. 테스트는 서버의 요청 리스너를 직접 호출해 상태 코드와 응답 본문을 검증했습니다.

@@ -1,0 +1,130 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lockey</title><link rel="icon" type="image/png" sizes="192x192" href="/lockey-icon.png"><link rel="stylesheet" href="/style.css"></head><body data-view="overview">
+<svg class="brand-symbols" width="0" height="0" aria-hidden="true" focusable="false"><defs><symbol id="lockey-key" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="10" r="6.5"/><path d="M17.3 14.7 5 27m3.5-3.5 3 3m1-7 3 3"/></g></symbol><symbol id="lockey-clover" viewBox="0 0 24 24"><g fill="currentColor"><path id="lockey-leaf" d="M11.8 11.8C9.6 11.5 4.4 11 3.5 7.8C2.8 5.5 4.4 3.8 6.5 4.3C6.3 2 8.7 1.2 10.4 2.6C12.5 4.3 12 9 11.8 11.8Z"/><use href="#lockey-leaf" transform="rotate(90 12 12)"/><use href="#lockey-leaf" transform="rotate(180 12 12)"/><use href="#lockey-leaf" transform="rotate(270 12 12)"/></g></symbol></defs></svg>
+<section id="model-gate" class="model-gate" aria-label="Zoro-1 연결 상태"><div class="gate-brand"><span class="lockey-logo" tabindex="0" role="img" aria-label="Lockey (럭키)">
+  <img class="lockey-icon" src="/lockey-icon.png" alt="" width="26" height="26">
+  <svg class="lockey-key" width="26" height="26" aria-hidden="true" focusable="false"><use href="#lockey-key"/></svg>
+  <strong class="lockey-name" aria-hidden="true">Lockey<span>.</span></strong>
+  <strong class="lockey-alias" aria-hidden="true">럭키<svg class="lockey-clover" width="14" height="14" aria-hidden="true" focusable="false"><use href="#lockey-clover"/></svg></strong>
+</span></div><div class="gate-visual"><canvas id="gimbal" aria-label="열쇠구멍을 둘러싼 입자 궤도와 라임색 열쇠"></canvas></div><div class="gate-status"><span class="gate-status-indicator"></span><span class="gate-model-name">Zoro-1</span><strong id="gate-model-status" aria-live="polite">연결 확인 중…</strong></div><div class="gate-actions"><button type="button" class="outline" id="gate-retry">다시 확인</button><button type="button" class="primary" id="gate-continue">프로젝트 선택으로 →</button></div><small class="gate-credit">@ikkkkilab</small></section><div class="app-window" inert><div class="window-bar"><span class="window-lights" aria-hidden="true"><i></i><i></i><i></i></span></div><div class="shell"><aside class="sidebar"><div class="brand"><span class="lockey-logo" tabindex="0" role="img" aria-label="Lockey (럭키)">
+  <img class="lockey-icon" src="/lockey-icon.png" alt="" width="26" height="26">
+  <svg class="lockey-key" width="26" height="26" aria-hidden="true" focusable="false"><use href="#lockey-key"/></svg>
+  <strong class="lockey-name" aria-hidden="true">Lockey<span>.</span></strong>
+  <strong class="lockey-alias" aria-hidden="true">럭키<svg class="lockey-clover" width="14" height="14" aria-hidden="true" focusable="false"><use href="#lockey-clover"/></svg></strong>
+</span><small>보안 점검</small></div><div class="workspace"><div class="ws-icon">T</div><div><strong>Team workspace</strong><small>로컬 데모 환경</small></div><span class="chevron">⌄</span></div><div class="side-label">작업 공간</div><nav aria-label="주 메뉴"><button class="nav active" data-view="overview"><span>◫</span> 프로젝트</button><button class="nav" data-view="issues"><span>◎</span> CWE <b id="side-count">—</b></button><button class="nav" data-view="prompts"><span>✎</span> 수정 프롬프트</button><button class="nav" data-view="news"><span>▤</span> 보안 뉴스</button></nav><div class="side-label section">PROJECT</div><button class="project"><span class="project-dot"></span> sample-store <small>가상 프로젝트</small></button><div class="side-bottom"><div class="side-help"><b>⌁</b><div><strong>안전한 시작</strong><p>제공된 샘플 코드만<br>분석합니다.</p></div></div></div></aside>
+<main><header class="topbar"><div><span class="muted">프로젝트</span><span class="slash">/</span><b>sample-store</b><span class="branch">⑂ &nbsp;main</span></div><div class="top-right"><span class="local-badge"><i></i> 로컬 환경</span><button class="icon-btn" id="help" aria-label="도움말">?</button></div></header><div class="content"><div class="page-head"><div><div class="eyebrow">PROJECT OVERVIEW <span> / </span> SAMPLE-STORE</div><h1>Dashboard</h1><p>프로젝트의 보안 상태를 확인하고, 필요한 조치를 시작하세요.</p></div><button id="scan" class="primary"><span>⌁</span> 샘플 검사 시작</button></div><template id="setup-window-bar"><span class="news-bar setup-window-bar" aria-hidden="true"><span class="window-lights news-lights"><i></i><i></i><i></i></span></span></template><section class="project-wizard" id="project-wizard"><ol class="wizard-progress" aria-label="프로젝트 설정 단계">
+  <li data-stage="survey" aria-current="step"><b>1</b> 프로젝트 선택</li>
+  <li data-stage="details" hidden><b>2</b> 추가 정보</li>
+  <li data-stage="target"><b>2</b> 점검 대상 선택</li>
+</ol>
+<h2 tabindex="-1">어떤 웹 서비스를 점검할까요?</h2>
+
+<div class="model-connection"><span>✳ Zoro-1 Arena</span><strong id="wizard-model-status">연결 확인 중</strong><button type="button" id="wizard-model-check">다시 확인</button></div><div class="wizard-questions">
+<div class="survey-row" role="radiogroup" aria-labelledby="survey-login-title">
+  <div><strong id="survey-login-title">사용자가 로그인하거나 계정을 만들 수 있나요?</strong></div>
+  <div class="survey-options">
+    <label><input type="radio" name="survey-login" value="yes"><span>예</span></label>
+    <label><input type="radio" name="survey-login" value="no"><span>아니요</span></label>
+    <label><input type="radio" name="survey-login" value="unknown"><span>잘 모르겠어요</span></label>
+  </div>
+</div>
+<div class="survey-row" role="radiogroup" aria-labelledby="survey-private-title" aria-describedby="survey-private-hint">
+  <div><strong id="survey-private-title">사용자마다 다른 사람에게 보이면 안 되는 정보가 있나요?</strong><small id="survey-private-hint">예: 개인 메모, 주문 내역, 결제 정보</small></div>
+  <div class="survey-options">
+    <label><input type="radio" name="survey-private" value="yes"><span>예</span></label>
+    <label><input type="radio" name="survey-private" value="no"><span>아니요</span></label>
+    <label><input type="radio" name="survey-private" value="unknown"><span>잘 모르겠어요</span></label>
+  </div>
+</div>
+<div class="survey-row" role="radiogroup" aria-labelledby="survey-input-title">
+  <div><strong id="survey-input-title">방문자가 글을 쓰거나 파일을 올릴 수 있나요?</strong></div>
+  <div class="survey-options">
+    <label><input type="radio" name="survey-input" value="yes"><span>예</span></label>
+    <label><input type="radio" name="survey-input" value="no"><span>아니요</span></label>
+    <label><input type="radio" name="survey-input" value="unknown"><span>잘 모르겠어요</span></label>
+  </div>
+</div>
+</div><div class="survey-actions page-navigation"><button type="button" class="outline" id="gate-back">← 모델 연결로</button><button type="button" class="primary" id="survey-next">다음 · 점검 대상 선택 →</button><p id="survey-message" aria-live="polite"></p></div><div id="survey-details" hidden>
+  <div id="detail-questions"></div>
+  <div class="page-navigation">
+    <button class="outline" type="button" id="details-back">← 이전</button>
+    <button class="primary" type="button" id="details-next">점검 대상 선택 →</button>
+    <p id="details-message" aria-live="polite"></p>
+  </div>
+</div><div id="target-configuration"><fieldset class="wizard-method"><legend class="visually-hidden">점검 방식</legend>
+<label><input type="radio" name="target-method" value="link" checked>
+  <span class="target-badge" hidden>추천</span><span class="method-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m10 13 4-4m-6 3-2 2a3 3 0 0 0 4 4l3-3m-2-6 3-3a3 3 0 0 1 4 4l-2 2"/></svg></span><strong>링크만 점검</strong><small>공개 응답 헤더만 확인해요.</small></label>
+<label><input type="radio" name="target-method" value="code">
+  <span class="target-badge" hidden>추천</span><span class="method-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m10 13 4-4m-6 3-2 2a3 3 0 0 0 4 4l3-3m-2-6 3-3a3 3 0 0 1 4 4l-2 2"/></svg> + <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h7l2 3h9v11H3z"/></svg></span><strong>링크와 로컬 폴더</strong><small>공개 응답과 코드를 함께 확인해요.</small></label>
+<label><input type="radio" name="target-method" value="folder">
+  <span class="target-badge" hidden>추천</span><span class="method-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h7l2 3h9v11H3z"/></svg></span><strong>로컬 폴더만</strong><small>웹 주소 없이 선택한 코드만 확인해요.</small></label>
+</fieldset>
+<label class="wizard-url">웹사이트 주소 <input type="url" id="target-url" placeholder="https://example.com" autocomplete="off"></label><details class="scope-note"><summary>링크 점검 범위</summary><p>설문 확인 시 입력한 공개 페이지를 한 번 읽습니다. 링크만 점검하면 인증 없이 HEAD 요청 한 번을 보냅니다. 링크와 폴더를 함께 점검하면 HTTPS 루트 GET 한 번과 코드에서 찾은 정적 경로 최대 5개의 HEAD 요청이 추가될 수 있습니다. 소스와 로그인 정보는 전송하지 않습니다. 코드 점검 시 127.0.0.1 테스트 서버 주소도 입력할 수 있으며 쿼리는 지원하지 않습니다.</p></details>
+<p id="verify-status" role="status"></p>
+<details id="verify-report" hidden><summary>설문 대조 결과</summary><ul></ul></details>
+</div></section><section class="project-input" aria-labelledby="project-input-title"><div class="input-heading"><div><h2 id="project-input-title">내 프로젝트</h2></div><label class="folder-select">폴더 선택<input id="project-folder" type="file" webkitdirectory multiple></label></div><div class="input-controls"><span id="folder-name">선택된 폴더 없음</span><button type="button" id="clear-folder" class="text-btn" hidden>선택 해제</button></div><p class="input-hint" id="file-note">.env, 키 파일, 의존성·빌드 폴더는 제외합니다. 코드 내용은 로컬 서버에서 처리합니다. Zoro-1에는 탐지 유형과 설문 선택값을 보내며, 직접 수정은 별도 동의 후 선택한 파일 전체를 모델 서버로 보냅니다. npm 잠금 파일이 있으면 패키지 이름과 버전을 OSV에 자동 대조합니다.</p></section><div id="wizard-actions" class="wizard-actions page-navigation"><button type="button" class="outline" id="survey-back">← 이전</button><button type="button" id="wizard-next" class="primary">점검 시작</button><p id="wizard-message" aria-live="polite"></p></div><div id="analysis-top" hidden><div class="wizard-kicker">STEP 2 / 분석 결과</div><p id="recheck-summary" class="input-hint" hidden></p><section id="link-results" class="panel" hidden></section></div><section id="news-page" aria-labelledby="news-title" hidden>
+<button type="button" class="text-btn" id="news-back" hidden>← 분석 결과로</button><header class="news-heading"><div><h1 id="news-title">보안 뉴스</h1><p id="news-description">Zoro-1 Arena가 정리한 보안 뉴스와 공지</p></div><button type="button" class="outline" id="news-refresh" aria-label="새로고침" title="새로고침"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 7v5h-5"/><path d="M19.7 11a8 8 0 1 0-1.9 6.6"/></svg></button></header>
+<form id="news-search" role="search" aria-label="보안 뉴스 검색">
+  <label for="news-keyword">검색어</label>
+  <input type="search" id="news-keyword" maxlength="120" placeholder="예: PHP, Java, 로그인 없이 접근" autocomplete="off">
+  <label class="news-date-field">시작일 <input type="date" id="news-start" required></label>
+  <label class="news-date-field">종료일 <input type="date" id="news-end" required></label>
+  <button type="submit" class="outline">검색</button>
+  <button type="button" class="text-btn" id="news-clear" hidden>전체 보기</button>
+  <div class="news-presets" role="group" aria-label="빠른 검색 기간">
+    <button type="button" class="outline" data-news-preset="week" aria-pressed="false">최근 1주일</button>
+    <button type="button" class="outline" data-news-preset="month" aria-pressed="false">최근 1개월</button>
+    <button type="button" class="outline" data-news-preset="quarter" aria-pressed="false">최근 3개월</button>
+    <button type="button" class="outline" data-news-preset="year" aria-pressed="true">최근 1년</button>
+  </div>
+</form>
+<p id="news-status" role="status"></p>
+<div id="news-list"></div>
+<nav id="news-pager" aria-label="뉴스 페이지" hidden><button id="news-prev" type="button" class="outline">이전</button><span id="news-page-count"></span><button id="news-next" type="button" class="outline">다음</button></nav>
+<template id="news-card">
+  <details class="news-window">
+    <summary>
+      <span class="news-bar"><span class="window-lights news-lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="news-category"></span></span>
+      <span class="news-title-row"><span class="news-title-copy"><strong class="news-headline"></strong> <time class="news-headline-date" hidden></time></span><i class="news-chevron" aria-hidden="true"></i></span>
+    </summary>
+    <div class="news-body">
+      <p class="news-connection" hidden></p><strong class="news-cause-label">왜 문제가 되나요?</strong><p class="news-cause"></p>
+      <div class="news-check"><strong><span aria-hidden="true">✓</span> 내가 확인할 것</strong><p></p></div>
+      <div class="news-citation"><span class="news-meta"></span><a target="_blank" rel="noopener noreferrer">원문 보기 ↗</a></div>
+    </div>
+  </details>
+</template>
+</section><section id="prompt-page" class="panel prompt-page" hidden><div class="panel-head"><div><div class="wizard-kicker">STEP 3 / AI 수정 요청</div><h2>AI에게 보낼 수정 요청</h2><p>확인된 파일·줄과 수정 방향을 바탕으로 Zoro-1이 요청을 구성합니다.</p></div></div><p class="prompt-disclaimer">수정 후에는 반드시 프로젝트에서 테스트하고 다시 점검해 주세요.</p><div id="prompt-list"></div><div class="page-navigation"><button type="button" class="outline" id="prompts-back">← 분석 결과로</button><button type="button" class="primary" id="to-recheck-page">다음 · 수정 후 재점검 →</button></div></section><section id="recheck-page" class="panel recheck-page" hidden><div class="wizard-kicker">STEP 4 / 수정 후 재점검</div><h2>수정을 완료했나요?</h2><p>수정한 프로젝트를 다시 점검해 확인할 항목이 남았는지 살펴봐요.</p><fieldset class="wizard-method"><legend>AI 도구 등으로 보안 수정을 마쳤나요?</legend><label><input type="radio" name="repair-done" value="yes"> 네, 수정을 마쳤어요</label><label><input type="radio" name="repair-done" value="no"> 아직 수정 중이에요</label></fieldset><div class="page-navigation"><button type="button" class="outline" id="recheck-back">← 수정 요청으로</button><button type="button" class="primary" id="recheck-run" disabled>다시 점검</button></div><p id="recheck-message" aria-live="polite"></p></section><section id="complete-page" class="panel complete-page" hidden><span class="completion-icon">✓</span><div class="wizard-kicker">점검 완료</div><h2>수정이 완료됐어요</h2><p id="complete-summary"></p><p>이 결과는 전체 서비스에 취약점이 없다는 보장이 아닙니다. 검사하지 않은 기능과 실행 테스트 결과를 함께 확인해 주세요.</p><div class="page-navigation"><button type="button" class="outline" id="complete-results">검사 결과 보기</button><button type="button" class="primary" id="complete-new">새 프로젝트 점검</button></div></section><div id="notice" class="notice"><span>✦</span><div><strong>먼저 샘플 프로젝트를 검사해 보세요.</strong><p>실제 코드 패턴 검사와 로컬 테스트를 실행합니다. 외부 사이트에는 요청하지 않습니다.</p></div><button id="notice-close" aria-label="안내 닫기">×</button></div>
+<section class="project-summary"><div class="summary-heading"><div class="folder-icon">▧</div><div><h2>sample-store <span>DEMO</span></h2><p>전자상거래 샘플 · JavaScript</p></div></div><div class="summary-stats"><div><small>분석 대상</small><strong>가상 코드 1개</strong></div><div><small>마지막 분석</small><strong id="last-run">아직 실행하지 않음</strong></div><div><small>분석 엔진</small><strong>로컬 패턴 검사</strong></div></div><div class="quality"><span class="quality-icon">◈</span><div><small>보안 게이트</small><strong id="gate">측정 전</strong></div></div></section>
+<div class="section-head"><div><h2 id="view-title">프로젝트 보안 현황</h2><p id="view-subtitle">최근 분석 결과를 한눈에 확인하세요.</p></div><span class="subtle" id="result-label">아직 검사 전</span></div>
+<div id="dashboard"><div class="metrics"><button class="metric" data-filter="all"><div class="metric-top"><span>전체 검토 항목</span><i class="metric-icon violet">◈</i></div><div class="metric-value"><strong id="total">—</strong><small>건</small></div><p>코드에서 발견한 검토 후보</p></button><button class="metric" data-filter="A05"><div class="metric-top"><span>입력값 보안</span><i class="metric-icon coral">⌘</i></div><div class="metric-value"><strong id="injection">—</strong><small>건</small></div><p>인젝션 및 출력 처리</p></button><button class="metric" data-filter="A02"><div class="metric-top"><span>설정 검토</span><i class="metric-icon amber">⚙</i></div><div class="metric-value"><strong id="settings">—</strong><small>건</small></div><p>배포 및 보안 설정</p></button><button class="metric" data-filter="dynamic"><div class="metric-top"><span>동적 검증</span><i class="metric-icon blue">◇</i></div><div class="metric-value"><strong id="dynamic-count">—</strong><small>건</small></div><p>로컬 API 테스트 결과</p></button></div>
+<div class="main-grid"><section class="findings" aria-label="발견한 보안 이슈"><div class="filterbar"><button class="filter selected" data-filter="all">전체</button><button class="filter" data-filter="A05">인젝션</button><button class="filter" data-filter="A02">설정</button><button class="filter" data-filter="A07">인증</button><button class="filter" data-filter="dynamic">동적 검증</button></div><div id="issue-list" class="issue-list"><div class="empty"><span>⌕</span><strong>아직 분석 결과가 없습니다</strong><p>샘플 검사를 시작하면 결과가 여기에 표시됩니다.</p></div></div></section><div class="right-col"><section class="panel model-panel"><div class="panel-head"><div><div class="title-line"><span class="zoro-symbol">✳</span><h3>Zoro-1 인텔리전스</h3></div><p>검토할 다음 단계를 선택합니다.</p></div><span class="model-state" id="model-state">연결 확인 중</span></div><div class="model-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="core">✳</div><div class="orbit-dot dot-a"></div><div class="orbit-dot dot-b"></div></div><div class="model-copy"><strong id="model-title">모델 연결 상태 확인 중</strong><p id="model-description">Zoro-1 서버 연결 설정을 확인하고 있습니다.</p></div><button id="model-details" class="outline">모델 연결 안내</button></section><section class="panel coverage"><div class="panel-head"><div><h3>검사 범위</h3><p>이번 데모에서 확인한 영역입니다.</p></div><span>···</span></div><div class="coverage-row"><span>코드 패턴 검사</span><b id="coverage-code">대기 중</b></div><div class="coverage-row"><span>코드 흐름 검증</span><b id="coverage-flow">대기 중</b></div><div class="coverage-row"><span>로컬 접근 제어 검증</span><b id="coverage-dynamic">대기 중</b></div><div class="coverage-row"><span>의존성 · 시크릿 검사</span><b>제한적 · OSV 수동 대조</b></div></section></div></div></div>
+<section class="panel" id="five-risks" hidden></section><section class="panel review-panel" id="project-review" hidden></section><section class="panel checklist-panel" id="checklist" hidden><div class="panel-head"><div><h3>검사 체크리스트</h3><p>첨부한 OWASP 체크리스트 형식으로 확인합니다. 미검사는 통과가 아닙니다.</p></div><button id="download-checklist" class="text-btn">CSV 저장</button></div><div class="table-scroll"><table><thead><tr><th>테스트 ID</th><th>검사 항목</th><th>검사 목적</th><th>상태</th><th>메모</th></tr></thead><tbody id="checklist-rows"></tbody></table></div><div class="panel-head finding-heading"><div><h3>발견 사항 요약</h3><p>CWE는 검토 후보입니다.</p></div><button id="download-findings" class="text-btn">CSV 저장</button></div><div class="table-scroll"><table><thead><tr><th>테스트 ID</th><th>취약점 이름</th><th>CWE 후보</th><th>위치</th><th>관찰 / 한계</th><th>권장 조치</th><th>검증 근거</th></tr></thead><tbody id="finding-rows"></tbody></table></div></section><div id="analysis-next" class="page-navigation"><button type="button" class="outline" id="wizard-back">← 프로젝트 설정으로</button><button type="button" class="primary" id="to-prompt-page">다음 · AI 수정 요청 →</button></div><footer><span>LOCKEY SECURITY <b>·</b> 로컬 데모</span></footer></div></main></div></div><template id="news-prompt-window">
+  <header class="news-bar">
+    <span class="window-lights">
+      <button type="button" class="window-close" aria-label="점검 프롬프트 닫기" title="닫기"></button>
+      <i aria-hidden="true"></i><i aria-hidden="true"></i>
+    </span>
+    <h2 id="news-prompt-title">내 프로젝트 점검 프롬프트</h2>
+  </header>
+  <div class="window-body">
+    <p class="news-prompt-topic"></p>
+    <textarea class="news-prompt-field" rows="12" readonly aria-label="프로젝트 점검 프롬프트"></textarea>
+    <div class="news-prompt-actions"><button type="button" class="primary">프롬프트 복사</button><span role="status"></span></div>
+  </div>
+</template>
+<dialog id="local-repair-window" class="window-modal" aria-labelledby="local-repair-title">
+  <header class="news-bar">
+    <span class="window-lights">
+      <button type="button" class="window-close" aria-label="로컬에 일괄 적용 닫기" title="닫기" autofocus></button>
+      <i aria-hidden="true"></i><i aria-hidden="true"></i>
+    </span>
+    <h2 id="local-repair-title">로컬에 일괄 적용</h2>
+  </header>
+  <div class="window-body dialog-body">
+    <p data-file-count></p><ul data-files></ul>
+    <p>아래 버튼을 누르면 이 파일의 전체 내용을 설정된 Zoro-1 서버에 보내 수정안을 만들어요.</p>
+    <button type="button" class="outline" data-generate>전체 수정안 만들기</button>
+    <div data-preview></div><p role="status" data-status></p>
+    <button type="button" class="primary" data-save disabled>모든 변경 승인 및 적용</button>
+  </div>
+</dialog><dialog id="modal"><form method="dialog"><button class="dialog-close" aria-label="닫기">×</button><div id="modal-content"></div></form></dialog><script type="module" src="/app.js"></script></body></html>

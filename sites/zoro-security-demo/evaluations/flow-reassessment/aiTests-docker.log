@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: decimal input parses and code-shaped input is rejected
+ok 1 - decimal input parses and code-shaped input is rejected
+  ---
+  duration_ms: 0.949416
+  type: 'test'
+  ...
+# Subtest: status invokes the fixed executable with no arguments and the shell disabled
+ok 2 - status invokes the fixed executable with no arguments and the shell disabled
+  ---
+  duration_ms: 0.462667
+  type: 'test'
+  ...
+# Subtest: inputs outside the command allowlist are rejected before execution
+ok 3 - inputs outside the command allowlist are rejected before execution
+  ---
+  duration_ms: 0.216584
+  type: 'test'
+  ...
+# Subtest: only the configured HTTPS API origin is requested
+ok 4 - only the configured HTTPS API origin is requested
+  ---
+  duration_ms: 0.824292
+  type: 'test'
+  ...
+# Subtest: requests disable redirect following and proxy configuration
+ok 5 - requests disable redirect following and proxy configuration
+  ---
+  duration_ms: 0.138791
+  type: 'test'
+  ...
+# Subtest: connection lookup supplies only allowed IPv4 and IPv6 addresses
+ok 6 - connection lookup supplies only allowed IPv4 and IPv6 addresses
+  ---
+  duration_ms: 0.5985
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 60.260625
