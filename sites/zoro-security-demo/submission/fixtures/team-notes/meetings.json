@@ -1,0 +1,35 @@
+{
+  "members": [
+    { "id": "bom", "name": "봄", "duty": "기록" },
+    { "id": "sol", "name": "솔", "duty": "장비" },
+    { "id": "dal", "name": "달", "duty": "전시" }
+  ],
+  "meetings": [
+    {
+      "id": "walk", "date": "2026-11-07", "title": "가을 출사 돌아보기",
+      "agenda": [
+        { "id": "prints", "title": "인화할 단체 사진 고르기", "assignee": "봄", "done": true }
+      ],
+      "comments": [{ "authorId": "sol", "text": "필름 카메라 두 대 모두 동아리방에 반납했어요." }]
+    },
+    {
+      "id": "exhibit", "date": "2026-11-21", "title": "겨울 사진전 설치 회의",
+      "agenda": [
+        { "id": "frames", "title": "대여할 액자 수량 확정", "assignee": "달", "done": true },
+        { "id": "captions", "title": "작품 설명 카드 교정", "assignee": "봄", "done": false }
+      ],
+      "comments": [{ "authorId": "dal", "text": "작은 액자 네 개는 입구 쪽 벽에 걸 수 있대요." }]
+    },
+    {
+      "id": "handover", "date": "2026-12-05", "title": "다음 학기 장비 인수인계",
+      "agenda": [
+        { "id": "tripods", "title": "삼각대 대여 장부 확인", "assignee": "솔", "done": false }
+      ],
+      "comments": []
+    }
+  ],
+  "personalNotes": [
+    { "ownerId": "bom", "meetingId": "exhibit", "text": "설명 카드 여분도 인쇄소에 부탁할 것." },
+    { "ownerId": "dal", "meetingId": "exhibit", "text": "액자 보증금 영수증 챙기기." }
+  ]
+}

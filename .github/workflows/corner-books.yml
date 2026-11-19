@@ -1,0 +1,25 @@
+name: "Lockey · 골목책방 · PHP 뉴스와 점검 프롬프트"
+on:
+  push:
+    branches: [submission/zoro-scenarios]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scenario:
+    runs-on: [self-hosted, lockey-submission]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Install locked dependencies
+        working-directory: sites/zoro-security-demo
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix submission --ignore-scripts --no-audit --no-fund
+      - name: "Run corner-books with Zoro-1"
+        working-directory: sites/zoro-security-demo
+        env:
+          CHROME_CHANNEL: chromium
+        run: node submission/run-scenario.mjs corner-books

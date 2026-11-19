@@ -1,0 +1,168 @@
+import assert from 'node:assert/strict';
+import { readFile, readdir } from 'node:fs/promises';
+import { chromium } from 'playwright-core';
+import { createSecurityNews } from '../security-news.mjs';
+import { newsAssessmentPrompt } from '../project-news.mjs';
+
+const base = process.env.LOCKEY_URL || 'http://127.0.0.1:4768';
+const fixtures = new URL('./fixtures/', import.meta.url);
+
+async function sources(project) {
+  const dir = new URL(project + '/', fixtures);
+  const names = await readdir(dir);
+  return Promise.all(names.map(async path => ({ path, text: await readFile(new URL(path, dir), 'utf8') })));
+}
+
+async function api(endpoint, input) {
+  const response = await fetch(new URL('/api/' + endpoint, base), {
+    method: 'POST', headers: { Origin: new URL(base).origin, 'Content-Type': 'application/json' },
+    body: JSON.stringify(input), signal: AbortSignal.timeout(180000)
+  });
+  const result = await response.json();
+  assert.ok(response.ok, result.error || response.statusText);
+  return result;
+}
+
+async function teamNotes() {
+  const files = await sources('team-notes');
+  const browser = await chromium.launch({ channel: process.env.CHROME_CHANNEL || 'chrome' });
+  try {
+    const page = await browser.newPage();
+    page.setDefaultTimeout(180000);
+    // Give the picker a real, writable directory in this disposable browser profile.
+    await page.addInitScript(files => {
+      window.showDirectoryPicker = async () => {
+        const dir = await (await navigator.storage.getDirectory()).getDirectoryHandle('team-notes', { create: true });
+        for (const { path, text } of files) {
+          const handle = await dir.getFileHandle(path, { create: true });
+          const stream = await handle.createWritable();
+          await stream.write(text);
+          await stream.close();
+        }
+        return dir;
+      };
+    }, files);
+    await page.goto(base);
+    await page.locator('#model-gate[data-connection="connected"]').waitFor();
+    await page.locator('#gate-continue').click();
+    for (const key of ['login', 'private', 'input']) {
+      await page.locator('label:has(input[name="survey-' + key + '"][value="yes"])').click();
+    }
+    await page.locator('#survey-next').click();
+    for (const [i, detail] of ['password', 'owner', 'text'].entries()) {
+      await page.locator('#detail-questions select:enabled').nth(i).selectOption(detail);
+    }
+    await page.locator('#details-next').click();
+    await page.locator('label:has(input[value="folder"])').click();
+    await page.locator('.folder-select').click();
+    await page.locator('#folder-name').filter({ hasText: 'team-notes' }).waitFor();
+    const scan = () => page.waitForResponse(r => r.url() === new URL('/api/project-scan', base).href);
+    const [before] = await Promise.all([scan(), page.locator('#wizard-next').click()]);
+    const initial = await before.json();
+    assert.deepEqual(initial.findings.map(f => f.id).sort(), ['cookie-httponly-false', 'debug-enabled']);
+    console.log('점검 결과', initial.findings.map(f => f.path + ' · ' + f.id).join(', '));
+    await page.locator('#to-prompt-page').click();
+    await page.locator('.prompt-local').click();
+    const dialog = page.locator('#local-repair-window');
+    await dialog.locator('[data-generate]').click();
+    await page.waitForFunction(() => !document.querySelector('#local-repair-window [data-save]').disabled ||
+      document.querySelector('#local-repair-window [data-generate]').textContent.includes('남은'));
+    assert.equal(await dialog.locator('[data-save]').isEnabled(), true, await dialog.locator('[data-status]').innerText());
+    const paths = await dialog.locator('.ai-repair h3').allTextContents();
+    assert.deepEqual(paths.sort(), ['minutes.js', 'session.js']);
+    console.log('Zoro-1 수정안 생성', paths.join(', '));
+    const [after] = await Promise.all([scan(), dialog.locator('[data-save]').click()]);
+    assert.equal((await after.json()).findings.length, 0);
+    await page.locator('#complete-page').waitFor();
+    const changed = await page.evaluate(async files => {
+      const dir = await (await navigator.storage.getDirectory()).getDirectoryHandle('team-notes');
+      const changed = [];
+      for (const file of files) {
+        const handle = await dir.getFileHandle(file.path);
+        if (await (await handle.getFile()).text() !== file.text) changed.push(file.path);
+      }
+      return changed.sort();
+    }, files);
+    assert.deepEqual(changed, paths);
+    console.log('브라우저 격리 폴더에 한 번 승인하여 저장한 파일', changed.join(', '));
+    console.log('재점검 0건 · 수정 완료 화면 확인');
+  } finally {
+    await browser.close();
+  }
+}
+
+async function gardenJournal() {
+  const files = await sources('garden-journal');
+  const profile = { login: { answer: 'no' }, private: { answer: 'no' }, input: { answer: 'unknown', detail: 'both' } };
+  for (const expected of ['partial', 'matched']) {
+    const report = await api('target-recommendation', { files, serviceProfile: profile });
+    const input = report.checks.find(check => check.feature === 'input');
+    assert.equal(input.status, expected);
+    assert.ok(input.observations.some(o => o.signal === 'text' && o.path === 'index.html'));
+    console.log('설문', input.detail, '→', input.status, '·', input.observations.map(o => o.label + ' (' + o.path + ':' + o.line + ')').join(', '));
+    assert.ok(['recommended','deferred'].includes(report.status), 'Zoro-1 추천 응답 필요');
+    console.log('Zoro-1 점검 대상 판단', report.status, report.choice || '추천 보류');
+    profile.input = { answer: 'yes', detail: 'text' };
+  }
+  const scan = await api('project-scan', { projectName: 'garden-journal', snapshot: files, files: files.map(({ path }) => ({ path })), serviceProfile: profile });
+  assert.equal(scan.findings.length, 0);
+  console.log('정정한 설문으로 소스', scan.scan.files, '개 점검 · 정적 발견 0건');
+}
+
+// Replay only the two saved publisher feeds. All model calls go to the configured Zoro-1.
+function archiveFetch(articles, model) {
+  return async (url, options) => {
+    const address = new URL(url);
+    if (address.origin === new URL(model).origin && address.pathname === '/v1/chat/completions') return fetch(url, options);
+    if (address.hostname === 'raw.githubusercontent.com') return new Response(null, { status: 503 });
+    if (address.hostname === 'thehackernews.com') {
+      const rows = articles.filter(a => a.source === 'The Hacker News');
+      return Response.json({ feed: { openSearch$totalResults: { $t: rows.length }, entry: rows.map(a => ({
+        title: { $t: a.title }, summary: { $t: a.summary }, published: { $t: a.published }, link: [{ rel: 'alternate', href: a.url }]
+      })) } });
+    }
+    assert.equal(address.hostname, 'www.bleepingcomputer.com');
+    const xml = articles.filter(a => a.source === 'BleepingComputer').map(a =>
+      '<item><title><![CDATA[' + a.title + ']]></title><link>' + a.url + '</link><description><![CDATA[' +
+      a.summary + ']]></description><pubDate>' + a.published + '</pubDate></item>').join('');
+    return new Response('<rss version="2.0"><channel>' + xml + '</channel></rss>');
+  };
+}
+
+async function cornerBooks() {
+  const files = await sources('corner-books');
+  const manifest = JSON.parse(files.find(f => f.path === 'composer.json').text);
+  const feature = JSON.parse(files.find(f => f.path === 'shelf.json').text);
+  assert.equal(feature.shelves.length, 3);
+  assert.ok(files.some(f => f.path === 'index.php' && f.text.includes('shelf.json')));
+  console.log('골목책방 · 추천 도서', feature.shelves.length, '권 · 낭독회', feature.reading.date);
+  console.log('검색 근거 composer.json · PHP 요구 범위', manifest.require.php, '· 운영 서버 패치 버전은 자료에 없음');
+  const archive = JSON.parse(await readFile(new URL('news.json', fixtures), 'utf8'));
+  const model = process.env.ZORO_DECIDE_URL || 'http://127.0.0.1:30001/v1/systemone';
+  const news = createSecurityNews({
+    url: model, expectedRevision: process.env.ZORO_EXPECTED_REVISION || 'bf1b76b9b4df03b05fcbb73444e1cd4db0f566da',
+    fetcher: archiveFetch(archive.articles, model), now: () => new Date(archive.asOf)
+  });
+  const query = { scope: 'all', keyword: 'PHP', startDate: '2026-11-14', endDate: '2026-11-20' };
+  const result = await news(query);
+  assert.equal(result.modelStatus, 'completed');
+  assert.equal(result.items.length, 1);
+  const [item] = result.items;
+  assert.equal(item.sources.length, 2);
+  console.log('보관 기사 기준일', archive.asOf, '· PHP 검색 · 보도', item.sources.length, '건 → 이슈', result.items.length, '건');
+  console.log('Zoro-1 헤드라인', item.explanation.headline);
+  console.log('내가 확인할 것', item.explanation.check);
+  const prompt = newsAssessmentPrompt(item);
+  for (const article of archive.articles) assert.ok(prompt.includes(article.url));
+  console.log('선택 기사 점검 프롬프트\n' + prompt);
+  const previousWeek = await news({ ...query, startDate: '2026-11-07', endDate: '2026-11-13' });
+  assert.equal(previousWeek.total, 0);
+  console.log('같은 검색어로 직전 주 조회 · 0건');
+}
+
+const scenarios = new Map([['team-notes', teamNotes], ['garden-journal', gardenJournal], ['corner-books', cornerBooks]]);
+const name = process.argv[2];
+if (!scenarios.has(name)) throw Error('시나리오를 선택하세요: ' + [...scenarios.keys()].join(', '));
+console.log('START', new Date().toISOString(), name);
+await scenarios.get(name)();
+console.log('PASS', new Date().toISOString(), name);

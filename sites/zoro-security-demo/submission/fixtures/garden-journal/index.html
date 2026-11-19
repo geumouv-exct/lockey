@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모퉁이 텃밭 · 작업 수첩</title>
+<h1>모퉁이 텃밭 작업 수첩</h1>
+<p>다음 당번에게 남길 일을 이 기기의 수첩에 적어 두세요.</p>
+<form id="post-entry">
+  <label>구역 <select name="bed">
+    <option>온실</option><option>허브 화단</option><option>도구 창고</option>
+  </select></label>
+  <label>작업 기록 <textarea name="post" maxlength="240" required></textarea></label>
+  <button>기록 남기기</button>
+</form>
+<h2>최근 기록</h2><ol id="entries"></ol>
+<script defer src="journal.js"></script>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><title>느티 사진동아리 · 운영 수첩</title></head>
+<body>
+  <header><h1>느티 운영 수첩</h1></header>
+  <main>
+    <section aria-labelledby="member-heading">
+      <h2 id="member-heading">운영진 로그인</h2>
+      <form action="/login" method="post">
+        <label>아이디 <input name="username" autocomplete="username" required></label>
+        <label>비밀번호 <input name="password" type="password" autocomplete="current-password" required></label>
+        <button>로그인</button>
+      </form>
+    </section>
+      <article id="meeting-detail">
+        <h2>겨울 사진전 설치 회의</h2>
+        <time datetime="2026-11-21">11월 21일</time>
+        <ol>
+          <li>대여할 액자 수량 확정 · 달 · 완료</li>
+          <li>작품 설명 카드 교정 · 봄 · 예정</li>
+        </ol>
+        <h3>회의 댓글</h3>
+        <ul><li>달 · 작은 액자 네 개는 입구 쪽 벽에 걸 수 있대요.</li></ul>
+        <form action="/comments" method="post">
+          <input type="hidden" name="meetingId" value="exhibit">
+          <label>운영진에게 남길 말 <textarea name="comment" required></textarea></label>
+          <button>댓글 남기기</button>
+        </form>
+      </article>
+  </main>
+</body>
+</html>

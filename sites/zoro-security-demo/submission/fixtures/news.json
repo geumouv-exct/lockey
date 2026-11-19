@@ -1,0 +1,19 @@
+{
+  "asOf": "2026-11-20T03:00:00Z",
+  "articles": [
+    {
+      "source": "The Hacker News",
+      "title": "PHP Fixes 7 Critical Flaws, Including Bugs That Could Allow Remote Code Execution",
+      "summary": "The PHP project released security updates for supported versions. Check the release notes for the affected versions.",
+      "published": "2026-11-19T20:48:07.133+05:30",
+      "url": "https://thehackernews.com/2026/11/php-fixes-7-critical-flaws-including.html"
+    },
+    {
+      "source": "BleepingComputer",
+      "title": "PHP security updates fix 18 flaws, including critical RCE bugs",
+      "summary": "PHP published security fixes covering several issues. Administrators can compare their installed version with the vendor release notes.",
+      "published": "Thu, 19 Nov 2026 11:28:23 -0500",
+      "url": "https://www.bleepingcomputer.com/news/security/php-security-updates-fix-18-flaws-including-critical-rce-bugs/"
+    }
+  ]
+}
