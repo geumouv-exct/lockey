@@ -1,10 +1,21 @@
-# lockey
-for saving vibecoders
+# Lockey
 
-## Lockey 제출 시나리오
+초보 바이브코더를 위한 웹 프로젝트 보안 점검 도구. 프로젝트에서 확인할 문제, 수정할 코드, 수정 후 재점검 결과를 한 흐름으로 제공.
 
-세 워크플로가 사진동아리, 모퉁이 텃밭, 골목책방을 각각 독립적으로 실행합니다. 테스트와 입력 데이터, 기대 동작은 [시나리오 안내](sites/zoro-security-demo/submission/README.md)에서 확인할 수 있습니다. Actions 실행의 마지막 단계에 해당 실행에서 생성한 로그가 표시됩니다.
+## 제출 시나리오
 
-러너는 Node.js, npm, Playwright에 맞는 Chromium과 `lockey-public-scenarios` 레이블을 사용합니다. 각 작업은 체크아웃한 커밋에서 Lockey 서버를 4768번 포트로 시작합니다. 러너에서 실제 Zoro-1 서버를 루프백 30001번 포트로 사용할 수 있어야 합니다. 사진동아리 시나리오는 해당 작업의 임시 브라우저 프로필에서만 파일을 변경합니다. 골목책방의 뉴스 원문 입력은 저장된 보도이며, 선별과 요약은 실행할 때 모델에 요청합니다.
+**GitHub Actions 독립 실행 3건 모두 성공** · 동일 커밋에서 실제 Zoro-1 Arena 사용 · [검증 커밋 `9dedbd2`](https://github.com/geumouv-exct/lockey/commit/9dedbd21a691be4b32cb9efc6011a96e9fc09eb9)
 
-[Lockey 실행 방법](sites/zoro-security-demo/README.md) · [시나리오 실행 방법](sites/zoro-security-demo/submission/README.md)
+| 시나리오 | Lockey 시연 기능 | Zoro-1 Arena 역할 | 실행 결과 | 제출용 로그 |
+| --- | --- | --- | --- | --- |
+| **느티 사진동아리** | 회의 수첩의 보안 설정 점검 → 파일별 변경 비교 → 한 번에 승인·저장 → 재점검 | 발견 위치와 소스를 바탕으로 회의록 디버그 설정(`minutes.js`)과 세션 쿠키 설정(`session.js`)의 수정안 생성 | 브라우저 격리 폴더에서 **파일 2개 일괄 수정**, 정적 점검 **2건 → 0건** | [사진동아리 실행로그](https://github.com/geumouv-exct/lockey/actions/runs/44595722238/job/135813310360) |
+| **모퉁이 텃밭** | “글과 파일을 모두 올릴 수 있다”는 설문 답변을 텃밭 작업 기록 폼과 대조 | 설문과 코드에서 찾은 근거를 바탕으로 점검 대상 추천 여부 판단 | 글 입력란만 확인. 답변을 ‘글만’으로 정정한 뒤 **부분 일치 → 일치**. 모델 판단은 두 차례 모두 **추천 보류** | [텃밭 실행로그](https://github.com/geumouv-exct/lockey/actions/runs/44595722055/job/135813309282) |
+| **골목책방** | PHP 보안 뉴스 기간 검색 → 같은 사건의 보도 통합 → 선택 기사로 내 프로젝트 점검 프롬프트 생성 | PHP가 주제인 이슈 선별, 초보자용 헤드라인과 프로젝트에서 확인할 사항 요약 | 보관 보도 **2건 → 이슈 1건**, 점검 프롬프트에 두 출처 포함. 같은 검색어로 직전 주 조회 시 **0건** | [책방 실행로그](https://github.com/geumouv-exct/lockey/actions/runs/44595722081/job/135813309260) |
+
+## 실행 환경
+
+- **공통** — Node.js, npm, 러너 레이블 `lockey-public-scenarios`. 각 작업에서 해당 커밋의 Lockey 서버를 4768번 포트로 기동. 실제 Zoro-1 서버는 러너의 루프백 30001번 포트로 연결.
+- **사진동아리** — Playwright와 호환되는 Chromium 필요. 작업별 임시 브라우저 프로필에서 수정·저장 검증.
+- **골목책방** — 동일한 검색 조건을 재현하기 위해 보도 두 건을 입력 데이터로 고정. 기사 선별과 요약은 실행 시 모델에 요청.
+
+[Lockey 실행 방법](sites/zoro-security-demo/README.md) · [시나리오별 테스트 데이터와 실행 명령](sites/zoro-security-demo/submission/README.md)
